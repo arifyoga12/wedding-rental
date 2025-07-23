@@ -31,48 +31,95 @@
         </div>
 
         <!-- Sidebar -->
-        <div class="w-64 bg-white shadow-lg min-h-screen transition-transform duration-300"
+        <div class="w-72 bg-white shadow-lg min-h-screen transition-transform duration-300"
              :class="{'transform -translate-x-full': !sidebarOpen}"
              x-show="sidebarOpen || window.innerWidth >= 768"
              @click.away="if (window.innerWidth < 768) sidebarOpen = false">
             <nav class="mt-8">
                 <div class="px-4 space-y-2">
+                    <!-- Dashboard -->
                     <button @click="activeTab = 'dashboard'; if (window.innerWidth < 768) sidebarOpen = false" 
                             :class="activeTab === 'dashboard' ? 'bg-pink-500 text-white' : 'text-gray-700 hover:bg-gray-100'"
                             class="w-full flex items-center px-4 py-3 text-left rounded-lg transition-colors">
                         <i class="fas fa-chart-line mr-3 text-lg"></i>
                         <span class="font-medium">Dashboard</span>
                     </button>
+                    <div class="text-xs text-gray-500 px-4 mt-1 mb-3">Ringkasan statistik: jumlah user, produk, transaksi, dsb.</div>
+
+                    <!-- Kategori -->
                     <button @click="activeTab = 'categories'; if (window.innerWidth < 768) sidebarOpen = false" 
                             :class="activeTab === 'categories' ? 'bg-pink-500 text-white' : 'text-gray-700 hover:bg-gray-100'"
                             class="w-full flex items-center px-4 py-3 text-left rounded-lg transition-colors">
                         <i class="fas fa-tags mr-3 text-lg"></i>
                         <span class="font-medium">Kategori</span>
                     </button>
+                    <div class="text-xs text-gray-500 px-4 mt-1 mb-3">Tambah/Edit/Hapus kategori: Pelaminan, Musik, MUA, dll</div>
+
+                    <!-- Vendor -->
                     <button @click="activeTab = 'vendors'; if (window.innerWidth < 768) sidebarOpen = false" 
                             :class="activeTab === 'vendors' ? 'bg-pink-500 text-white' : 'text-gray-700 hover:bg-gray-100'"
                             class="w-full flex items-center px-4 py-3 text-left rounded-lg transition-colors">
                         <i class="fas fa-store mr-3 text-lg"></i>
                         <span class="font-medium">Vendor</span>
                     </button>
-                    <button @click="activeTab = 'products'; if (window.innerWidth < 768) sidebarOpen = false" 
-                            :class="activeTab === 'products' ? 'bg-pink-500 text-white' : 'text-gray-700 hover:bg-gray-100'"
-                            class="w-full flex items-center px-4 py-3 text-left rounded-lg transition-colors">
-                        <i class="fas fa-box mr-3 text-lg"></i>
-                        <span class="font-medium">Data Master</span>
-                    </button>
-                    <button @click="activeTab = 'orders'; if (window.innerWidth < 768) sidebarOpen = false" 
-                            :class="activeTab === 'orders' ? 'bg-pink-500 text-white' : 'text-gray-700 hover:bg-gray-100'"
-                            class="w-full flex items-center px-4 py-3 text-left rounded-lg transition-colors">
-                        <i class="fas fa-shopping-cart mr-3 text-lg"></i>
-                        <span class="font-medium">Data Transaksi</span>
-                    </button>
-                    <button @click="activeTab = 'reports'; if (window.innerWidth < 768) sidebarOpen = false" 
-                            :class="activeTab === 'reports' ? 'bg-pink-500 text-white' : 'text-gray-700 hover:bg-gray-100'"
-                            class="w-full flex items-center px-4 py-3 text-left rounded-lg transition-colors">
-                        <i class="fas fa-chart-bar mr-3 text-lg"></i>
-                        <span class="font-medium">Laporan</span>
-                    </button>
+                    <div class="text-xs text-gray-500 px-4 mt-1 mb-3">Tambah/Edit/Hapus vendor (nama, alamat, logo, dsb)</div>
+
+                    <!-- Data Master -->
+                    <div class="space-y-1">
+                        <button @click="dataMasterOpen = !dataMasterOpen" 
+                                class="w-full flex items-center justify-between px-4 py-3 text-left rounded-lg transition-colors text-gray-700 hover:bg-gray-100">
+                            <div class="flex items-center">
+                                <i class="fas fa-database mr-3 text-lg"></i>
+                                <span class="font-medium">Data Master</span>
+                            </div>
+                            <i class="fas fa-chevron-down transition-transform" :class="{'rotate-180': dataMasterOpen}"></i>
+                        </button>
+                        
+                        <!-- Data Master Sub-menu -->
+                        <div x-show="dataMasterOpen" x-transition class="ml-6 space-y-1">
+                            <!-- Produk -->
+                            <button @click="activeTab = 'products'; dataMasterOpen = true; if (window.innerWidth < 768) sidebarOpen = false" 
+                                    :class="activeTab === 'products' ? 'bg-pink-100 text-pink-700 border-l-2 border-pink-500' : 'text-gray-600 hover:bg-gray-50'"
+                                    class="w-full flex items-center px-4 py-2 text-left rounded-lg transition-colors text-sm">
+                                <i class="fas fa-box mr-3"></i>
+                                <span>Produk</span>
+                            </button>
+                            <div class="text-xs text-gray-500 px-4 ml-7 mb-2">Input produk baru (gambar, nama, kategori, harga, deskripsi, vendor). Produk langsung muncul di halaman shop setelah disimpan.</div>
+
+                            <!-- Data Transaksi -->
+                            <div class="space-y-1">
+                                <button @click="dataTransaksiOpen = !dataTransaksiOpen" 
+                                        class="w-full flex items-center justify-between px-4 py-2 text-left rounded-lg transition-colors text-gray-600 hover:bg-gray-50 text-sm">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-exchange-alt mr-3"></i>
+                                        <span>Data Transaksi</span>
+                                    </div>
+                                    <i class="fas fa-chevron-down transition-transform text-xs" :class="{'rotate-180': dataTransaksiOpen}"></i>
+                                </button>
+                                
+                                <!-- Data Transaksi Sub-menu -->
+                                <div x-show="dataTransaksiOpen" x-transition class="ml-6 space-y-1">
+                                    <!-- Data Order -->
+                                    <button @click="activeTab = 'orders'; dataMasterOpen = true; dataTransaksiOpen = true; if (window.innerWidth < 768) sidebarOpen = false" 
+                                            :class="activeTab === 'orders' ? 'bg-pink-100 text-pink-700 border-l-2 border-pink-500' : 'text-gray-600 hover:bg-gray-50'"
+                                            class="w-full flex items-center px-4 py-2 text-left rounded-lg transition-colors text-sm">
+                                        <i class="fas fa-shopping-cart mr-3"></i>
+                                        <span>Data Order</span>
+                                    </button>
+                                    <div class="text-xs text-gray-500 px-4 ml-7 mb-2">Menampilkan semua pesanan customer. Fitur konfirmasi pesanan: status pengerjaan, status pembayaran (DP/Lunas), lihat bukti pembayaran.</div>
+
+                                    <!-- Laporan Transaksi -->
+                                    <button @click="activeTab = 'reports'; dataMasterOpen = true; dataTransaksiOpen = true; if (window.innerWidth < 768) sidebarOpen = false" 
+                                            :class="activeTab === 'reports' ? 'bg-pink-100 text-pink-700 border-l-2 border-pink-500' : 'text-gray-600 hover:bg-gray-50'"
+                                            class="w-full flex items-center px-4 py-2 text-left rounded-lg transition-colors text-sm">
+                                        <i class="fas fa-chart-bar mr-3"></i>
+                                        <span>Laporan Transaksi</span>
+                                    </button>
+                                    <div class="text-xs text-gray-500 px-4 ml-7 mb-2">Fitur cetak/print (untuk keperluan operasional)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </nav>
         </div>
@@ -386,7 +433,7 @@
 
             <!-- Orders Tab -->
             <div x-show="activeTab === 'orders'" x-transition>
-                <h2 class="text-xl font-semibold mb-6">Data Transaksi & Pesanan</h2>
+                <h2 class="text-xl font-semibold mb-6">Data Order</h2>
                 
                 <!-- Order Status Filter -->
                 <div class="mb-6 flex space-x-4">
@@ -477,7 +524,7 @@
 
             <!-- Reports Tab -->
             <div x-show="activeTab === 'reports'" x-transition>
-                <h2 class="text-xl font-semibold mb-6">Laporan Penjualan</h2>
+                <h2 class="text-xl font-semibold mb-6">Laporan Transaksi</h2>
                 
                 <!-- Report Filters -->
                 <div class="bg-white rounded-lg shadow-md p-6 mb-6">
@@ -746,6 +793,8 @@ function adminDashboard() {
     return {
         activeTab: 'dashboard',
         sidebarOpen: true,
+        dataMasterOpen: false,
+        dataTransaksiOpen: false,
         showCategoryModal: false,
         showVendorModal: false,
         showProductModal: false,
@@ -833,6 +882,14 @@ function adminDashboard() {
             const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
             this.reportStartDate = firstDay.toISOString().split('T')[0];
             this.reportEndDate = today.toISOString().split('T')[0];
+            
+            // Auto-open dropdowns based on active tab
+            if (['products', 'orders', 'reports'].includes(this.activeTab)) {
+                this.dataMasterOpen = true;
+                if (['orders', 'reports'].includes(this.activeTab)) {
+                    this.dataTransaksiOpen = true;
+                }
+            }
             
             // Load initial data
             this.loadCategories();
