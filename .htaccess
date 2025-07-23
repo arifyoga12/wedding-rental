@@ -1,0 +1,11 @@
+# Redirect semua request ke folder public
+RewriteEngine On
+
+# Jika request bukan untuk file yang ada di root, redirect ke public
+RewriteCond %{REQUEST_URI} !^/wedding-rental/public/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ public/$1 [L]
+
+# Jika mengakses root wedding-rental, redirect ke public
+RewriteRule ^$ public/ [L]

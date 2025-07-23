@@ -1,0 +1,205 @@
+{% extends 'layout/base.twig' %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8" x-data="authPage()">
+        <div class="text-center">
+            <i class="fas fa-heart text-pink-500 text-4xl mb-4"></i>
+            <h2 class="text-3xl font-bold text-gray-800">Selamat Datang di WeddingRental</h2>
+            <p class="mt-2 text-gray-600">Masuk ke akun Anda atau buat yang baru</p>
+        </div>
+        
+        <!-- Toggle Buttons -->
+        <div class="flex bg-gray-100 rounded-lg p-1">
+            <button @click="isLogin = true" 
+                    :class="isLogin ? 'bg-white shadow-sm' : ''" 
+                    class="flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all">
+                Masuk
+            </button>
+            <button @click="isLogin = false" 
+                    :class="!isLogin ? 'bg-white shadow-sm' : ''" 
+                    class="flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all">
+                Daftar
+            </button>
+        </div>
+        
+        <!-- Login Form -->
+        <form x-show="isLogin" @submit.prevent="login()" class="space-y-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input type="email" x-model="loginForm.email" required 
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <input type="password" x-model="loginForm.password" required 
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+            </div>
+            <button type="submit" :disabled="loading"
+                    class="w-full bg-pink-500 text-white py-3 rounded-lg font-semibold hover:bg-pink-600 transition-colors disabled:opacity-50">
+                <span x-show="!loading">Masuk</span>
+                <span x-show="loading">Sedang Masuk...</span>
+            </button>
+        </form>
+        
+        <!-- Register Form -->
+        <form x-show="!isLogin" @submit.prevent="register()" class="space-y-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
+                <input type="text" x-model="registerForm.name" required 
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input type="email" x-model="registerForm.email" required 
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Telepon (Opsional)</label>
+                <input type="tel" x-model="registerForm.phone" 
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <input type="password" x-model="registerForm.password" required minlength="6"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                <p class="text-xs text-gray-500 mt-1">Minimal 6 karakter</p>
+            </div>
+            <button type="submit" :disabled="loading"
+                    class="w-full bg-pink-500 text-white py-3 rounded-lg font-semibold hover:bg-pink-600 transition-colors disabled:opacity-50">
+                <span x-show="!loading">Buat Akun</span>
+                <span x-show="loading">Membuat Akun...</span>
+            </button>
+        </form>
+        
+        <!-- Demo Account Info -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <h3 class="font-semibold text-blue-800 mb-2">Akun Demo</h3>
+            <div class="space-y-3">
+                <div>
+                    <p class="text-sm font-medium text-blue-800 mb-1">Akun Admin:</p>
+                    <p class="text-sm text-blue-700">Email: admin@wedding.com</p>
+                    <p class="text-sm text-blue-700">Password: admin123</p>
+                    <p class="text-xs text-blue-600 italic">✅ Password sudah diperbaiki - siap digunakan!</p>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-blue-800 mb-1">Atau buat akun baru sebagai customer</p>
+                    <p class="text-xs text-blue-600">Akun customer akan masuk ke halaman utama</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+function authPage() {
+    return {
+        isLogin: true,
+        loading: false,
+        loginForm: {
+            email: '',
+            password: ''
+        },
+        registerForm: {
+            name: '',
+            email: '',
+            phone: '',
+            password: ''
+        },
+        
+        async login() {
+            this.loading = true;
+            
+            try {
+                const baseUrl = '{{ base_url }}';
+                const response = await fetch(`${baseUrl}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(this.loginForm)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('Login berhasil!', 'success');
+                    
+                    // Redirect based on user role  
+                    let redirectUrl = '{{ base_url }}/';
+                    if (result.is_admin) {
+                        redirectUrl = '{{ base_url }}/admin';
+                    } else if (result.redirect_url) {
+                        redirectUrl = '{{ base_url }}' + result.redirect_url;
+                    }
+                    
+                    console.log('Redirecting to:', redirectUrl);
+                    setTimeout(() => {
+                        window.location.href = redirectUrl;
+                    }, 1000);
+                } else {
+                    console.error('Login failed:', result.message);
+                    showNotification(result.message || 'Login gagal', 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showNotification('Terjadi kesalahan', 'error');
+            } finally {
+                this.loading = false;
+            }
+        },
+        
+        async register() {
+            this.loading = true;
+            
+            try {
+                const baseUrl = '{{ base_url }}';
+                console.log('Registering with data:', this.registerForm);
+                
+                const response = await fetch(`${baseUrl}/api/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(this.registerForm)
+                });
+                
+                console.log('Registration response status:', response.status);
+                
+                const result = await response.json();
+                console.log('Registration result:', result);
+                
+                if (result.success) {
+                    if (result.redirect_to_login) {
+                        showNotification(result.message || 'Akun berhasil dibuat! Silakan login.', 'success');
+                        // Switch to login form after successful registration
+                        setTimeout(() => {
+                            this.isLogin = true;
+                            // Pre-fill email in login form
+                            this.loginForm.email = this.registerForm.email;
+                            // Clear registration form
+                            this.registerForm = {
+                                name: '',
+                                email: '',
+                                phone: '',
+                                password: ''
+                            };
+                        }, 1500);
+                    } else {
+                        showNotification('Akun berhasil dibuat!', 'success');
+                        setTimeout(() => {
+                            window.location.href = '{{ base_url }}/';
+                        }, 1000);
+                    }
+                } else {
+                    showNotification(result.message || 'Pendaftaran gagal', 'error');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showNotification('Terjadi kesalahan', 'error');
+            } finally {
+                this.loading = false;
+            }
+        }
+    }
+}
+</script>
+{% endblock %}
+{% endblock %}

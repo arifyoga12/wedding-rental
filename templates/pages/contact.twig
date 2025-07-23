@@ -1,0 +1,115 @@
+{% extends 'layout/base.twig' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="text-center mb-12">
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">Hubungi Kami</h1>
+        <p class="text-gray-600">Hubungi kami untuk pertanyaan apapun tentang kebutuhan pernikahan Anda</p>
+    </div>
+    
+    <div class="grid md:grid-cols-2 gap-12">
+        <!-- Contact Form -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold mb-6">Kirim pesan kepada kami</h2>
+            <form class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama</label>
+                    <input type="text" required 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" required 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Telepon</label>
+                    <input type="tel" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Pernikahan</label>
+                    <input type="date" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Pesan</label>
+                    <textarea rows="4" required 
+                              placeholder="Ceritakan tentang rencana pernikahan Anda..."
+                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"></textarea>
+                </div>
+                <button type="submit" 
+                        class="w-full bg-pink-500 text-white py-3 rounded-lg font-semibold hover:bg-pink-600 transition-colors">
+                    Kirim Pesan
+                </button>
+            </form>
+        </div>
+        
+        <!-- Contact Information -->
+        <div class="space-y-8">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold mb-6">Hubungi kami</h2>
+                <div class="space-y-4">
+                    <div class="flex items-center">
+                        <div class="bg-pink-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-map-marker-alt text-pink-500"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold">Alamat</h3>
+                            <p class="text-gray-600">Jl. Wedding Street No. 123<br>Jakarta, Indonesia 12345</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <div class="bg-pink-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-phone text-pink-500"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold">Telepon</h3>
+                            <p class="text-gray-600">+62 812-3456-7890</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <div class="bg-pink-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-envelope text-pink-500"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold">Email</h3>
+                            <p class="text-gray-600">info@weddingrental.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <div class="bg-pink-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-clock text-pink-500"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold">Jam Operasional</h3>
+                            <p class="text-gray-600">Sen - Jum: 09:00 - 18:00<br>Sab - Min: 10:00 - 16:00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold mb-4">Ikuti Kami</h2>
+                <div class="flex space-x-4">
+                    <a href="#" class="bg-pink-100 w-10 h-10 rounded-full flex items-center justify-center text-pink-500 hover:bg-pink-200 transition-colors">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="bg-pink-100 w-10 h-10 rounded-full flex items-center justify-center text-pink-500 hover:bg-pink-200 transition-colors">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="bg-pink-100 w-10 h-10 rounded-full flex items-center justify-center text-pink-500 hover:bg-pink-200 transition-colors">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="#" class="bg-pink-100 w-10 h-10 rounded-full flex items-center justify-center text-pink-500 hover:bg-pink-200 transition-colors">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

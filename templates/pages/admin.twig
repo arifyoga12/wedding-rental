@@ -1,0 +1,1319 @@
+{% extends 'layout/base.twig' %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-100">
+    <!-- Admin Header -->
+    <div class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <h1 class="text-2xl font-bold text-gray-800">Dashboard Admin</h1>
+                <div class="flex items-center space-x-4">
+                    <span class="text-gray-600">Selamat datang, {{ user.name }}</span>
+                    <a href="{{ base_url }}/" class="text-pink-500 hover:text-pink-600">
+                        <i class="fas fa-external-link-alt mr-1"></i>Lihat Situs
+                    </a>
+                    <button onclick="logout()" class="text-red-500 hover:text-red-600">
+                        <i class="fas fa-sign-out-alt mr-1"></i>Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" x-data="adminDashboard()">
+        <!-- Navigation Tabs -->
+        <div class="mb-8">
+            <nav class="flex space-x-8 border-b border-gray-200">
+                <button @click="activeTab = 'dashboard'" 
+                        :class="activeTab === 'dashboard' ? 'border-pink-500 text-pink-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
+                        class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+                    <i class="fas fa-chart-line mr-2"></i>Dashboard
+                </button>
+                <button @click="activeTab = 'categories'" 
+                        :class="activeTab === 'categories' ? 'border-pink-500 text-pink-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
+                        class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+                    <i class="fas fa-tags mr-2"></i>Kategori
+                </button>
+                <button @click="activeTab = 'vendors'" 
+                        :class="activeTab === 'vendors' ? 'border-pink-500 text-pink-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
+                        class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+                    <i class="fas fa-store mr-2"></i>Vendor
+                </button>
+                <button @click="activeTab = 'products'" 
+                        :class="activeTab === 'products' ? 'border-pink-500 text-pink-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
+                        class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+                    <i class="fas fa-box mr-2"></i>Data Master
+                </button>
+                <button @click="activeTab = 'orders'" 
+                        :class="activeTab === 'orders' ? 'border-pink-500 text-pink-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
+                        class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+                    <i class="fas fa-shopping-cart mr-2"></i>Data Transaksi
+                </button>
+                <button @click="activeTab = 'reports'" 
+                        :class="activeTab === 'reports' ? 'border-pink-500 text-pink-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
+                        class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+                    <i class="fas fa-chart-bar mr-2"></i>Laporan
+                </button>
+            </nav>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div x-show="activeTab === 'dashboard'" x-transition>
+            <h2 class="text-xl font-semibold mb-6">Ringkasan Statistik</h2>
+            
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center">
+                        <div class="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-users text-blue-500 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800">{{ stats.total_users }}</h3>
+                            <p class="text-gray-600">Total User</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center">
+                        <div class="bg-green-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-box text-green-500 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800">{{ stats.total_products }}</h3>
+                            <p class="text-gray-600">Total Produk</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center">
+                        <div class="bg-purple-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-shopping-cart text-purple-500 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800">{{ stats.total_orders }}</h3>
+                            <p class="text-gray-600">Total Transaksi</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center">
+                        <div class="bg-pink-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-store text-pink-500 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800">{{ stats.total_vendors }}</h3>
+                            <p class="text-gray-600">Total Vendor</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Recent Orders -->
+                <div class="bg-white rounded-lg shadow-md">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-800">Pesanan Terbaru</h3>
+                    </div>
+                    <div class="p-6">
+                        {% for order in stats.recent_orders %}
+                            <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
+                                <div>
+                                    <p class="font-medium text-gray-800">#{{ order.id }} - {{ order.user_name }}</p>
+                                    <p class="text-sm text-gray-500">{{ order.event_date|date('M j, Y') }}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-semibold text-pink-600">Rp {{ order.total|number_format }}</p>
+                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
+                                        {{ order.status == 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+                                           order.status == 'confirmed' ? 'bg-blue-100 text-blue-800' :
+                                           'bg-green-100 text-green-800' }}">
+                                        {{ order.status|title }}
+                                    </span>
+                                </div>
+                            </div>
+                        {% else %}
+                            <p class="text-gray-500 text-center py-4">Belum ada pesanan</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Recent Products -->
+                <div class="bg-white rounded-lg shadow-md">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-800">Produk Terbaru</h3>
+                    </div>
+                    <div class="p-6">
+                        {% for product in stats.recent_products|slice(0, 5) %}
+                            <div class="flex items-center py-2 border-b border-gray-100 last:border-b-0">
+                                <img src="{{ product.image }}" alt="{{ product.name }}" class="w-10 h-10 object-cover rounded mr-3">
+                                <div class="flex-1">
+                                    <p class="font-medium text-gray-800 text-sm">{{ product.name }}</p>
+                                    <p class="text-xs text-gray-500">{{ product.category|title }}</p>
+                                </div>
+                                <p class="text-sm font-semibold text-pink-600">Rp {{ product.price|number_format }}</p>
+                            </div>
+                        {% else %}
+                            <p class="text-gray-500 text-center py-4">Belum ada produk</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories Tab -->
+        <div x-show="activeTab === 'categories'" x-transition>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-semibold">Manajemen Kategori</h2>
+                <button @click="showCategoryModal = true; editingCategory = null; resetCategoryForm()" 
+                        class="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition-colors">
+                    <i class="fas fa-plus mr-2"></i>Tambah Kategori
+                </button>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nama Kategori</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Icon</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Jumlah Produk</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <template x-for="category in categories" :key="category.id">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" x-text="category.name"></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="category.icon"></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="category.product_count || 0"></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button @click="editCategory(category)" class="text-blue-600 hover:text-blue-900 mr-3">
+                                            <i class="fas fa-edit mr-1"></i>Edit
+                                        </button>
+                                        <button @click="deleteCategory(category.id)" class="text-red-600 hover:text-red-900">
+                                            <i class="fas fa-trash mr-1"></i>Hapus
+                                        </button>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vendors Tab -->
+        <div x-show="activeTab === 'vendors'" x-transition>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-semibold">Manajemen Vendor</h2>
+                <button @click="showVendorModal = true; editingVendor = null; resetVendorForm()" 
+                        class="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition-colors">
+                    <i class="fas fa-plus mr-2"></i>Tambah Vendor
+                </button>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nama Vendor</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Alamat</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Telepon</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rating</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <template x-for="vendor in vendorsList" :key="vendor.id">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center mr-3">
+                                                <i class="fas fa-store text-gray-500"></i>
+                                            </div>
+                                            <div>
+                                                <div class="text-sm font-medium text-gray-900" x-text="vendor.name"></div>
+                                                <div class="text-sm text-gray-500" x-text="(vendor.specialties?.length || 0) + ' spesialisasi'"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-gray-900" x-text="vendor.address?.substring(0, 50) + '...'"></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="vendor.phone"></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-star text-yellow-400 mr-1"></i>
+                                            <span x-text="vendor.rating"></span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button @click="editVendor(vendor)" class="text-blue-600 hover:text-blue-900 mr-3">
+                                            <i class="fas fa-edit mr-1"></i>Edit
+                                        </button>
+                                        <button @click="deleteVendor(vendor.id)" class="text-red-600 hover:text-red-900">
+                                            <i class="fas fa-trash mr-1"></i>Hapus
+                                        </button>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Tab -->
+        <div x-show="activeTab === 'products'" x-transition>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-semibold">Data Master Produk</h2>
+                <button @click="showProductModal = true; editingProduct = null; resetProductForm()" 
+                        class="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition-colors">
+                    <i class="fas fa-plus mr-2"></i>Tambah Produk
+                </button>
+            </div>
+
+            <!-- Category Filter -->
+            <div class="mb-4 bg-white rounded-lg shadow-md p-4">
+                <div class="flex flex-wrap gap-2">
+                    <button @click="productCategoryFilter = ''" 
+                            :class="productCategoryFilter === '' ? 'bg-pink-500 text-white' : 'bg-gray-200 text-gray-700'"
+                            class="px-3 py-1 rounded-full text-sm font-medium hover:bg-pink-400 transition-colors">
+                        Semua
+                    </button>
+                    <template x-for="category in categories" :key="category.id">
+                        <button @click="productCategoryFilter = category.id" 
+                                :class="productCategoryFilter === category.id ? 'bg-pink-500 text-white' : 'bg-gray-200 text-gray-700'"
+                                class="px-3 py-1 rounded-full text-sm font-medium hover:bg-pink-400 transition-colors">
+                            <span x-text="category.icon"></span>
+                            <span x-text="category.name" class="ml-1"></span>
+                        </button>
+                    </template>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Produk</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Kategori</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Harga</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Vendor</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <template x-for="product in filteredProducts" :key="product.id">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <img :src="product.image" :alt="product.name" class="w-10 h-10 object-cover rounded mr-3">
+                                            <div>
+                                                <div class="text-sm font-medium text-gray-900" x-text="product.name"></div>
+                                                <div class="text-sm text-gray-500">Rating: <span x-text="product.rating"></span>/5</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
+                                              :class="{
+                                                  'bg-purple-100 text-purple-800': product.category === 'pelaminan',
+                                                  'bg-blue-100 text-blue-800': product.category === 'fotografer',
+                                                  'bg-green-100 text-green-800': product.category === 'musik',
+                                                  'bg-pink-100 text-pink-800': product.category === 'mua',
+                                                  'bg-yellow-100 text-yellow-800': product.category === 'mc',
+                                                  'bg-indigo-100 text-indigo-800': product.category === 'paket'
+                                              }"
+                                              x-text="product.category.charAt(0).toUpperCase() + product.category.slice(1)">
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        Rp <span x-text="parseInt(product.price).toLocaleString('id-ID')"></span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="product.vendor_name || 'Tidak ada vendor'"></td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
+                                              :class="product.available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
+                                              x-text="product.available ? 'Tersedia' : 'Tidak Tersedia'">
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button @click="editProduct(product)" class="text-blue-600 hover:text-blue-900 mr-3">
+                                            <i class="fas fa-edit mr-1"></i>Edit
+                                        </button>
+                                        <button @click="deleteProduct(product.id)" class="text-red-600 hover:text-red-900">
+                                            <i class="fas fa-trash mr-1"></i>Hapus
+                                        </button>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Tab -->
+        <div x-show="activeTab === 'orders'" x-transition>
+            <h2 class="text-xl font-semibold mb-6">Data Transaksi & Pesanan</h2>
+            
+            <!-- Order Status Filter -->
+            <div class="mb-6 flex space-x-4">
+                <select x-model="orderStatusFilter" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                    <option value="">Semua Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="completed">Completed</option>
+                </select>
+                <select x-model="paymentStatusFilter" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                    <option value="">Semua Pembayaran</option>
+                    <option value="none">Belum Bayar</option>
+                    <option value="dp">DP</option>
+                    <option value="full">Lunas</option>
+                </select>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID Pesanan</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tanggal Acara</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pembayaran</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <template x-for="order in filteredOrders" :key="order.id">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                        <span class="bg-gray-100 px-2 py-1 rounded text-xs" x-text="'#' + order.id"></span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="order.user_name"></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="new Date(order.event_date).toLocaleDateString('id-ID')"></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Rp <span x-text="parseInt(order.total).toLocaleString('id-ID')"></span></td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <select @change="updateOrderStatus(order.id, $event.target.value)" 
+                                                class="text-xs px-2 py-1 rounded-full border-0 focus:ring-2 focus:ring-pink-500"
+                                                :class="{
+                                                    'bg-yellow-100 text-yellow-800': order.status === 'pending',
+                                                    'bg-blue-100 text-blue-800': order.status === 'confirmed',
+                                                    'bg-purple-100 text-purple-800': order.status === 'in-progress',
+                                                    'bg-green-100 text-green-800': order.status === 'completed'
+                                                }">
+                                            <option value="pending" :selected="order.status === 'pending'">Pending</option>
+                                            <option value="confirmed" :selected="order.status === 'confirmed'">Confirmed</option>
+                                            <option value="in-progress" :selected="order.status === 'in-progress'">In Progress</option>
+                                            <option value="completed" :selected="order.status === 'completed'">Completed</option>
+                                        </select>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
+                                              :class="{
+                                                  'bg-red-100 text-red-800': order.payment_status === 'none',
+                                                  'bg-yellow-100 text-yellow-800': order.payment_status === 'dp',
+                                                  'bg-green-100 text-green-800': order.payment_status === 'full'
+                                              }"
+                                              x-text="order.payment_status === 'none' ? 'Belum Bayar' : 
+                                                     order.payment_status === 'dp' ? 'DP' : 'Lunas'">
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button @click="viewOrderDetail(order.id)" class="text-blue-600 hover:text-blue-900 mr-2">
+                                            <i class="fas fa-eye mr-1"></i>Detail
+                                        </button>
+                                        <button @click="printOrder(order.id)" class="text-green-600 hover:text-green-900 mr-2">
+                                            <i class="fas fa-print mr-1"></i>Print
+                                        </button>
+                                        <template x-if="order.payment_status !== 'none'">
+                                            <button @click="viewPaymentProof(order.id)" class="text-purple-600 hover:text-purple-900">
+                                                <i class="fas fa-receipt mr-1"></i>Bukti
+                                            </button>
+                                        </template>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Tab -->
+        <div x-show="activeTab === 'reports'" x-transition>
+            <h2 class="text-xl font-semibold mb-6">Laporan Penjualan</h2>
+            
+            <!-- Report Filters -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Mulai</label>
+                        <input type="date" x-model="reportStartDate" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Akhir</label>
+                        <input type="date" x-model="reportEndDate" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+                        <select x-model="reportCategoryFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                            <option value="">Semua Kategori</option>
+                            <template x-for="category in categories" :key="category.id">
+                                <option :value="category.id" x-text="category.name"></option>
+                            </template>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button @click="generateReport()" 
+                                class="w-full bg-pink-500 text-white px-4 py-2 rounded-md hover:bg-pink-600 transition-colors">
+                            <i class="fas fa-search mr-2"></i>Filter Laporan
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Report Results -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Sales Summary -->
+                <div class="bg-white rounded-lg shadow-md">
+                    <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                        <h3 class="text-lg font-semibold text-gray-800">Ringkasan Penjualan</h3>
+                        <button @click="printSalesReport()" class="text-pink-500 hover:text-pink-600">
+                            <i class="fas fa-print mr-1"></i>Print
+                        </button>
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Total Pesanan:</span>
+                                <span class="font-semibold" x-text="reportData.totalOrders || 0"></span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Total Penjualan:</span>
+                                <span class="font-semibold text-green-600">Rp <span x-text="(reportData.totalSales || 0).toLocaleString('id-ID')"></span></span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Rata-rata per Pesanan:</span>
+                                <span class="font-semibold">Rp <span x-text="(reportData.averageOrder || 0).toLocaleString('id-ID')"></span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Products -->
+                <div class="bg-white rounded-lg shadow-md">
+                    <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                        <h3 class="text-lg font-semibold text-gray-800">Produk Terlaris</h3>
+                        <button @click="printProductReport()" class="text-pink-500 hover:text-pink-600">
+                            <i class="fas fa-print mr-1"></i>Print
+                        </button>
+                    </div>
+                    <div class="p-6">
+                        <template x-if="reportData.topProducts && reportData.topProducts.length > 0">
+                            <div class="space-y-3">
+                                <template x-for="(product, index) in reportData.topProducts" :key="product.id">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <span class="w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-semibold mr-3" x-text="index + 1"></span>
+                                            <div>
+                                                <p class="font-medium text-gray-800" x-text="product.name"></p>
+                                                <p class="text-sm text-gray-500" x-text="product.category"></p>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="font-semibold text-gray-800" x-text="product.total_sold + ' terjual'"></p>
+                                            <p class="text-sm text-green-600">Rp <span x-text="parseInt(product.total_revenue).toLocaleString('id-ID')"></span></p>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                        <template x-if="!reportData.topProducts || reportData.topProducts.length === 0">
+                            <p class="text-gray-500 text-center py-4">Tidak ada data produk untuk periode ini</p>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Modal -->
+        <div x-show="showCategoryModal" x-transition class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+                <h3 class="text-lg font-semibold mb-4" x-text="editingCategory ? 'Edit Kategori' : 'Tambah Kategori'"></h3>
+                <form @submit.prevent="saveCategory()">
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Kategori</label>
+                        <input type="text" x-model="categoryForm.name" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Icon</label>
+                        <input type="text" x-model="categoryForm.icon" placeholder="🎊" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" @click="showCategoryModal = false" 
+                                class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                            Batal
+                        </button>
+                        <button type="submit" 
+                                class="px-4 py-2 bg-pink-500 text-white rounded-md hover:bg-pink-600">
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Vendor Modal -->
+        <div x-show="showVendorModal" x-transition class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-96 overflow-y-auto">
+                <h3 class="text-lg font-semibold mb-4" x-text="editingVendor ? 'Edit Vendor' : 'Tambah Vendor'"></h3>
+                <form @submit.prevent="saveVendor()">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Vendor</label>
+                            <input type="text" x-model="vendorForm.name" required 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Telepon</label>
+                            <input type="tel" x-model="vendorForm.phone" required 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
+                        <textarea x-model="vendorForm.address" required rows="3"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+                        <textarea x-model="vendorForm.description" rows="3"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"></textarea>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Rating</label>
+                            <input type="number" x-model="vendorForm.rating" min="0" max="5" step="0.1" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Logo URL</label>
+                            <input type="url" x-model="vendorForm.logo" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Spesialisasi (pisahkan dengan koma)</label>
+                        <input type="text" x-model="vendorForm.specialtiesText" 
+                               placeholder="Dekorasi Pelaminan, Lighting Design, Floral Arrangement"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" @click="showVendorModal = false" 
+                                class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                            Batal
+                        </button>
+                        <button type="submit" 
+                                class="px-4 py-2 bg-pink-500 text-white rounded-md hover:bg-pink-600">
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Product Modal -->
+        <div x-show="showProductModal" x-transition class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-96 overflow-y-auto">
+                <h3 class="text-lg font-semibold mb-4" x-text="editingProduct ? 'Edit Produk' : 'Tambah Produk'"></h3>
+                <form @submit.prevent="saveProduct()">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Produk</label>
+                            <input type="text" x-model="productForm.name" required 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Harga</label>
+                            <input type="number" x-model="productForm.price" required 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+                            <select x-model="productForm.category" required 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                                <option value="">Pilih Kategori</option>
+                                <template x-for="category in categories" :key="category.id">
+                                    <option :value="category.id" x-text="category.name"></option>
+                                </template>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Vendor</label>
+                            <select x-model="productForm.vendor_id" 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                                <option value="">Pilih Vendor</option>
+                                <template x-for="vendor in vendorsList" :key="vendor.id">
+                                    <option :value="vendor.id" x-text="vendor.name"></option>
+                                </template>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">URL Gambar</label>
+                        <input type="url" x-model="productForm.image" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+                        <textarea x-model="productForm.description" rows="3"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"></textarea>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Rating</label>
+                            <input type="number" x-model="productForm.rating" min="0" max="5" step="0.1" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" x-model="productForm.available" id="available" 
+                                   class="mr-2 text-pink-500 focus:ring-pink-500">
+                            <label for="available" class="text-sm font-medium text-gray-700">Tersedia</label>
+                        </div>
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" @click="showProductModal = false" 
+                                class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                            Batal
+                        </button>
+                        <button type="submit" 
+                                class="px-4 py-2 bg-pink-500 text-white rounded-md hover:bg-pink-600">
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+function adminDashboard() {
+    return {
+        activeTab: 'dashboard',
+        showCategoryModal: false,
+        showVendorModal: false,
+        showProductModal: false,
+        editingCategory: null,
+        editingVendor: null,
+        editingProduct: null,
+        
+        // Data
+        categories: [
+            { id: 'pelaminan', name: 'Pelaminan', icon: '👑', product_count: 0 },
+            { id: 'fotografer', name: 'Fotografer', icon: '📸', product_count: 0 },
+            { id: 'musik', name: 'Musik', icon: '🎵', product_count: 0 },
+            { id: 'mua', name: 'MUA', icon: '💄', product_count: 0 },
+            { id: 'mc', name: 'MC', icon: '🎤', product_count: 0 },
+            { id: 'paket', name: 'Paket', icon: '🎊', product_count: 0 }
+        ],
+        vendorsList: {{ vendors|json_encode|raw }},
+        productsList: {{ products|json_encode|raw }},
+        ordersList: {{ orders|json_encode|raw }},
+        
+        // Filters
+        productCategoryFilter: '',
+        orderStatusFilter: '',
+        paymentStatusFilter: '',
+        
+        // Report data
+        reportStartDate: '',
+        reportEndDate: '',
+        reportCategoryFilter: '',
+        reportData: {
+            totalOrders: 0,
+            totalSales: 0,
+            averageOrder: 0,
+            topProducts: []
+        },
+        
+        // Forms
+        categoryForm: {
+            name: '',
+            icon: ''
+        },
+        vendorForm: {
+            name: '',
+            address: '',
+            phone: '',
+            description: '',
+            rating: 4.5,
+            logo: '',
+            specialtiesText: ''
+        },
+        productForm: {
+            name: '',
+            price: '',
+            category: '',
+            vendor_id: '',
+            image: '',
+            description: '',
+            rating: 4.5,
+            available: true
+        },
+
+        // Computed properties
+        get filteredProducts() {
+            if (!this.productCategoryFilter) return this.productsList;
+            return this.productsList.filter(product => product.category === this.productCategoryFilter);
+        },
+
+        get filteredOrders() {
+            let filtered = this.ordersList;
+            
+            if (this.orderStatusFilter) {
+                filtered = filtered.filter(order => order.status === this.orderStatusFilter);
+            }
+            
+            if (this.paymentStatusFilter) {
+                filtered = filtered.filter(order => order.payment_status === this.paymentStatusFilter);
+            }
+            
+            return filtered;
+        },
+
+        init() {
+            // Set default report dates
+            const today = new Date();
+            const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+            this.reportStartDate = firstDay.toISOString().split('T')[0];
+            this.reportEndDate = today.toISOString().split('T')[0];
+            
+            // Load initial data
+            this.loadCategories();
+            this.loadVendors();
+            this.loadProducts();
+            this.loadOrders();
+        },
+
+        // Category methods
+        resetCategoryForm() {
+            this.categoryForm = { name: '', icon: '' };
+        },
+
+        editCategory(category) {
+            this.editingCategory = category;
+            this.categoryForm = { ...category };
+            this.showCategoryModal = true;
+        },
+
+        async saveCategory() {
+            try {
+                const baseUrl = '{{ base_url }}';
+                const url = this.editingCategory 
+                    ? `${baseUrl}/api/admin/categories/${this.editingCategory.id}`
+                    : `${baseUrl}/api/admin/categories`;
+                
+                const response = await fetch(url, {
+                    method: this.editingCategory ? 'PUT' : 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(this.categoryForm)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showNotification('Kategori berhasil disimpan!', 'success');
+                    this.showCategoryModal = false;
+                    
+                    if (this.editingCategory) {
+                        // Update existing category
+                        const index = this.categories.findIndex(c => c.id === this.editingCategory.id);
+                        if (index !== -1) {
+                            this.categories[index] = { ...this.categories[index], ...this.categoryForm };
+                        }
+                    } else {
+                        // Add new category
+                        this.categories.push({
+                            id: this.categoryForm.name.toLowerCase(),
+                            ...this.categoryForm,
+                            product_count: 0
+                        });
+                    }
+                } else {
+                    showNotification(result.message || 'Gagal menyimpan kategori', 'error');
+                }
+            } catch (error) {
+                console.error('Error saving category:', error);
+                showNotification('Terjadi kesalahan', 'error');
+            }
+        },
+
+        async deleteCategory(categoryId) {
+            if (!confirm('Yakin ingin menghapus kategori ini?')) return;
+
+            try {
+                const baseUrl = '{{ base_url }}';
+                const response = await fetch(`${baseUrl}/api/admin/categories/${categoryId}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showNotification('Kategori berhasil dihapus!', 'success');
+                    this.categories = this.categories.filter(c => c.id !== categoryId);
+                } else {
+                    showNotification(result.message || 'Gagal menghapus kategori', 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting category:', error);
+                showNotification('Terjadi kesalahan', 'error');
+            }
+        },
+
+        // Vendor methods
+        resetVendorForm() {
+            this.vendorForm = {
+                name: '',
+                address: '',
+                phone: '',
+                description: '',
+                rating: 4.5,
+                logo: '',
+                specialtiesText: ''
+            };
+        },
+
+        editVendor(vendor) {
+            this.editingVendor = vendor;
+            this.vendorForm = { 
+                ...vendor,
+                specialtiesText: Array.isArray(vendor.specialties) ? vendor.specialties.join(', ') : ''
+            };
+            this.showVendorModal = true;
+        },
+
+        async saveVendor() {
+            try {
+                const baseUrl = '{{ base_url }}';
+                const url = this.editingVendor 
+                    ? `${baseUrl}/api/admin/vendors/${this.editingVendor.id}`
+                    : `${baseUrl}/api/admin/vendors`;
+                
+                // Convert specialties text to array
+                const vendorData = {
+                    ...this.vendorForm,
+                    specialties: this.vendorForm.specialtiesText.split(',').map(s => s.trim()).filter(s => s)
+                };
+                delete vendorData.specialtiesText;
+                
+                const response = await fetch(url, {
+                    method: this.editingVendor ? 'PUT' : 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(vendorData)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showNotification('Vendor berhasil disimpan!', 'success');
+                    this.showVendorModal = false;
+                    
+                    if (this.editingVendor) {
+                        // Update existing vendor
+                        const index = this.vendorsList.findIndex(v => v.id === this.editingVendor.id);
+                        if (index !== -1) {
+                            this.vendorsList[index] = { ...this.vendorsList[index], ...vendorData };
+                        }
+                    } else {
+                        // Add new vendor
+                        this.vendorsList.push({
+                            id: Date.now(), // Temporary ID
+                            ...vendorData
+                        });
+                    }
+                } else {
+                    showNotification(result.message || 'Gagal menyimpan vendor', 'error');
+                }
+            } catch (error) {
+                console.error('Error saving vendor:', error);
+                showNotification('Terjadi kesalahan', 'error');
+            }
+        },
+
+        async deleteVendor(vendorId) {
+            if (!confirm('Yakin ingin menghapus vendor ini?')) return;
+
+            try {
+                const baseUrl = '{{ base_url }}';
+                const response = await fetch(`${baseUrl}/api/admin/vendors/${vendorId}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showNotification('Vendor berhasil dihapus!', 'success');
+                    this.vendorsList = this.vendorsList.filter(v => v.id !== vendorId);
+                } else {
+                    showNotification(result.message || 'Gagal menghapus vendor', 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting vendor:', error);
+                showNotification('Terjadi kesalahan', 'error');
+            }
+        },
+
+        // Product methods
+        resetProductForm() {
+            this.productForm = {
+                name: '',
+                price: '',
+                category: '',
+                vendor_id: '',
+                image: '',
+                description: '',
+                rating: 4.5,
+                available: true
+            };
+        },
+
+        editProduct(product) {
+            this.editingProduct = product;
+            this.productForm = { ...product };
+            this.showProductModal = true;
+        },
+
+        async saveProduct() {
+            try {
+                const baseUrl = '{{ base_url }}';
+                const url = this.editingProduct 
+                    ? `${baseUrl}/api/admin/products/${this.editingProduct.id}`
+                    : `${baseUrl}/api/admin/products`;
+                
+                const response = await fetch(url, {
+                    method: this.editingProduct ? 'PUT' : 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(this.productForm)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showNotification('Produk berhasil disimpan!', 'success');
+                    this.showProductModal = false;
+                    
+                    if (this.editingProduct) {
+                        // Update existing product
+                        const index = this.productsList.findIndex(p => p.id === this.editingProduct.id);
+                        if (index !== -1) {
+                            this.productsList[index] = { ...this.productsList[index], ...this.productForm };
+                        }
+                    } else {
+                        // Add new product
+                        this.productsList.push({
+                            id: Date.now(), // Temporary ID
+                            ...this.productForm
+                        });
+                    }
+                } else {
+                    showNotification(result.message || 'Gagal menyimpan produk', 'error');
+                }
+            } catch (error) {
+                console.error('Error saving product:', error);
+                showNotification('Terjadi kesalahan', 'error');
+            }
+        },
+
+        async deleteProduct(productId) {
+            if (!confirm('Yakin ingin menghapus produk ini?')) return;
+
+            try {
+                const baseUrl = '{{ base_url }}';
+                const response = await fetch(`${baseUrl}/api/admin/products/${productId}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showNotification('Produk berhasil dihapus!', 'success');
+                    this.productsList = this.productsList.filter(p => p.id !== productId);
+                } else {
+                    showNotification(result.message || 'Gagal menghapus produk', 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting product:', error);
+                showNotification('Terjadi kesalahan', 'error');
+            }
+        },
+
+        // Order methods
+        async updateOrderStatus(orderId, status) {
+            try {
+                const baseUrl = '{{ base_url }}';
+                const response = await fetch(`${baseUrl}/api/admin/orders/${orderId}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showNotification('Status pesanan berhasil diperbarui!', 'success');
+                    // Update local data
+                    const order = this.ordersList.find(o => o.id == orderId);
+                    if (order) {
+                        order.status = status;
+                    }
+                } else {
+                    showNotification(result.message || 'Gagal memperbarui status', 'error');
+                }
+            } catch (error) {
+                console.error('Error updating order status:', error);
+                showNotification('Terjadi kesalahan', 'error');
+            }
+        },
+
+        // Report methods
+        async generateReport() {
+            if (!this.reportStartDate || !this.reportEndDate) {
+                showNotification('Silakan pilih tanggal mulai dan akhir', 'error');
+                return;
+            }
+
+            try {
+                const baseUrl = '{{ base_url }}';
+                const params = new URLSearchParams({
+                    start_date: this.reportStartDate,
+                    end_date: this.reportEndDate,
+                    category: this.reportCategoryFilter || ''
+                });
+
+                const response = await fetch(`${baseUrl}/api/admin/reports/sales?${params}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    this.reportData = result.data;
+                    showNotification('Laporan berhasil dibuat!', 'success');
+                } else {
+                    showNotification(result.message || 'Gagal membuat laporan', 'error');
+                }
+            } catch (error) {
+                console.error('Error generating report:', error);
+                showNotification('Terjadi kesalahan', 'error');
+            }
+        },
+
+        printSalesReport() {
+            const printWindow = window.open('', '_blank');
+            const reportHtml = this.generateSalesReportHTML();
+            printWindow.document.write(reportHtml);
+            printWindow.document.close();
+            printWindow.print();
+        },
+
+        printProductReport() {
+            const printWindow = window.open('', '_blank');
+            const reportHtml = this.generateProductReportHTML();
+            printWindow.document.write(reportHtml);
+            printWindow.document.close();
+            printWindow.print();
+        },
+
+        generateSalesReportHTML() {
+            const startDate = new Date(this.reportStartDate).toLocaleDateString('id-ID');
+            const endDate = new Date(this.reportEndDate).toLocaleDateString('id-ID');
+            
+            return `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Laporan Penjualan</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        .header { text-align: center; margin-bottom: 30px; }
+                        .company-name { font-size: 24px; font-weight: bold; color: #e91e63; }
+                        .report-title { font-size: 18px; margin: 10px 0; }
+                        .period { font-size: 14px; color: #666; }
+                        .summary { margin: 20px 0; }
+                        .summary-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
+                        .summary-item:last-child { border-bottom: 2px solid #e91e63; font-weight: bold; }
+                        .footer { margin-top: 40px; text-align: center; font-size: 12px; color: #666; }
+                        @media print {
+                            body { margin: 0; }
+                            .no-print { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <div class="company-name">SewaDekorasi</div>
+                        <div class="report-title">Laporan Penjualan</div>
+                        <div class="period">Periode: ${startDate} - ${endDate}</div>
+                    </div>
+                    
+                    <div class="summary">
+                        <div class="summary-item">
+                            <span>Total Pesanan:</span>
+                            <span>${this.reportData.totalOrders || 0}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Total Penjualan:</span>
+                            <span>Rp ${(this.reportData.totalSales || 0).toLocaleString('id-ID')}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Rata-rata per Pesanan:</span>
+                            <span>Rp ${(this.reportData.averageOrder || 0).toLocaleString('id-ID')}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="footer">
+                        <p>Dicetak pada: ${new Date().toLocaleString('id-ID')}</p>
+                        <p>SewaDekorasi - Sistem Manajemen Wedding Rental</p>
+                    </div>
+                </body>
+                </html>
+            `;
+        },
+
+        generateProductReportHTML() {
+            const startDate = new Date(this.reportStartDate).toLocaleDateString('id-ID');
+            const endDate = new Date(this.reportEndDate).toLocaleDateString('id-ID');
+            
+            let productsHtml = '';
+            if (this.reportData.topProducts && this.reportData.topProducts.length > 0) {
+                this.reportData.topProducts.forEach((product, index) => {
+                    productsHtml += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${product.name}</td>
+                            <td>${product.category}</td>
+                            <td>${product.total_sold}</td>
+                            <td>Rp ${parseInt(product.total_revenue).toLocaleString('id-ID')}</td>
+                        </tr>
+                    `;
+                });
+            } else {
+                productsHtml = '<tr><td colspan="5" style="text-align: center;">Tidak ada data produk</td></tr>';
+            }
+            
+            return `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Laporan Produk Terlaris</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        .header { text-align: center; margin-bottom: 30px; }
+                        .company-name { font-size: 24px; font-weight: bold; color: #e91e63; }
+                        .report-title { font-size: 18px; margin: 10px 0; }
+                        .period { font-size: 14px; color: #666; }
+                        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+                        th { background-color: #f8f9fa; font-weight: bold; }
+                        tr:nth-child(even) { background-color: #f8f9fa; }
+                        .footer { margin-top: 40px; text-align: center; font-size: 12px; color: #666; }
+                        @media print {
+                            body { margin: 0; }
+                            .no-print { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <div class="company-name">SewaDekorasi</div>
+                        <div class="report-title">Laporan Produk Terlaris</div>
+                        <div class="period">Periode: ${startDate} - ${endDate}</div>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Produk</th>
+                                <th>Kategori</th>
+                                <th>Jumlah Terjual</th>
+                                <th>Total Revenue</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${productsHtml}
+                        </tbody>
+                    </table>
+                    
+                    <div class="footer">
+                        <p>Dicetak pada: ${new Date().toLocaleString('id-ID')}</p>
+                        <p>SewaDekorasi - Sistem Manajemen Wedding Rental</p>
+                    </div>
+                </body>
+                </html>
+            `;
+        },
+
+        // Data loading methods (placeholder - in real app these would fetch from API)
+        loadCategories() {
+            // Categories are already initialized
+        },
+
+        loadVendors() {
+            // Vendors are loaded from server
+        },
+
+        loadProducts() {
+            // Products are loaded from server
+        },
+
+        loadOrders() {
+            // Orders are loaded from server
+        }
+    }
+}
+
+// Global functions for admin actions
+function viewOrderDetail(orderId) {
+    console.log('View order detail:', orderId);
+    // Implementation for viewing order detail
+}
+
+function printOrder(orderId) {
+    window.open(`{{ base_url }}/admin/orders/${orderId}/print`, '_blank');
+}
+
+function viewPaymentProof(orderId) {
+    console.log('View payment proof:', orderId);
+    // Implementation for viewing payment proof
+}
+
+async function logout() {
+    try {
+        const response = await fetch('{{ base_url }}/api/auth/logout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        
+        if (response.ok) {
+            window.location.href = '{{ base_url }}/';
+        }
+    } catch (error) {
+        console.error('Logout error:', error);
+    }
+}
+</script>
+{% endblock %}
+{% endblock %}
