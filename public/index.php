@@ -184,7 +184,7 @@ try {
                 break;
             default:
                 // Handle dynamic routes for admin
-                if (preg_match('/^\/api\/admin\/categories\/(\d+)$/', $requestUri, $matches)) {
+                if (preg_match('/^\/api\/admin\/categories\/(\w+)$/', $requestUri, $matches)) {
                     $controller = new AdminController();
                     $controller->updateCategory($matches[1]);
                 } elseif (preg_match('/^\/api\/admin\/vendors\/(\d+)$/', $requestUri, $matches)) {
@@ -198,7 +198,7 @@ try {
                     $controller->updateOrderStatus($matches[1]);
                 } else {
                     http_response_code(404);
-                    echo json_encode(['error' => 'Endpoint API tidak ditemukan']);
+                    echo json_encode(['error' => 'Endpoint API tidak ditemukan', 'path' => $requestUri]);
                 }
         }
     } elseif ($method === 'PUT') {
@@ -217,7 +217,7 @@ try {
             $controller->updateOrderStatus($matches[1]);
         } else {
             http_response_code(404);
-            echo json_encode(['error' => 'Endpoint API tidak ditemukan']);
+            echo json_encode(['error' => 'Endpoint API tidak ditemukan', 'path' => $requestUri, 'method' => $method]);
         }
     } elseif ($method === 'DELETE') {
         // Handle DELETE requests for admin
@@ -232,32 +232,29 @@ try {
             $controller->deleteProduct($matches[1]);
         } else {
             http_response_code(404);
-            echo json_encode(['error' => 'Endpoint API tidak ditemukan']);
+            echo json_encode(['error' => 'Endpoint API tidak ditemukan', 'path' => $requestUri, 'method' => $method]);
         }
     } else {
         http_response_code(405);
-        echo json_encode(['error' => 'Method tidak diizinkan']);
+        echo json_encode(['error' => 'Method tidak diizinkan', 'method' => $method, 'path' => $requestUri]);
     }
 } catch (Exception $e) {
     http_response_code(500);
-    echo "<h1>500 - Kesalahan Server</h1>";
-    echo "<p>Kesalahan: " . htmlspecialchars($e->getMessage()) . "</p>";
-    if ($_ENV['APP_DEBUG'] ?? false) {
-        echo "<pre>" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
-    }
-}
-?>
-            default:
-                http_response_code(404);
-                echo json_encode(['error' => 'Endpoint API tidak ditemukan']);
+    
+    // Check if this is an API request
+    if (strpos($requestUri, '/api/') === 0) {
+        header('Content-Type: application/json');
+        echo json_encode([
+            'error' => 'Kesalahan server internal', 
+            'message' => $e->getMessage(),
+            'debug' => ($_ENV['APP_DEBUG'] ?? false) ? $e->getTraceAsString() : null
+        ]);
+    } else {
+        echo "<h1>500 - Kesalahan Server</h1>";
+        echo "<p>Kesalahan: " . htmlspecialchars($e->getMessage()) . "</p>";
+        if ($_ENV['APP_DEBUG'] ?? false) {
+            echo "<pre>" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
         }
-    }
-} catch (Exception $e) {
-    http_response_code(500);
-    echo "<h1>500 - Kesalahan Server</h1>";
-    echo "<p>Kesalahan: " . htmlspecialchars($e->getMessage()) . "</p>";
-    if ($_ENV['APP_DEBUG'] ?? false) {
-        echo "<pre>" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
     }
 }
 ?>
