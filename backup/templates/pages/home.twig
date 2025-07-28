@@ -1,0 +1,120 @@
+{% extends 'layout/base.twig' %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-gradient-to-r from-pink-500 to-purple-600 text-white py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl md:text-6xl font-bold mb-6">
+            Wujudkan Pernikahan Impian Anda
+        </h1>
+        <p class="text-xl md:text-2xl mb-8 opacity-90">
+            Dekorasi pernikahan terbaik dengan layanan profesional untuk hari istimewa Anda
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{{ base_url }}/shop" class="bg-white text-pink-500 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors">
+                Lihat Produk
+            </a>
+            <a href="{{ base_url }}/vendors" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-pink-500 transition-colors">
+                Cari Vendor
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Mengapa Memilih SewaDekorasi?</h2>
+            <p class="text-gray-600 text-lg">Kami menyediakan layanan terbaik untuk pernikahan impian Anda</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="text-center p-6">
+                <div class="bg-pink-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-crown text-pink-500 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">Dekorasi Premium</h3>
+                <p class="text-gray-600">Dekorasi berkualitas tinggi dengan desain elegan dan mewah untuk hari istimewa Anda</p>
+            </div>
+            
+            <div class="text-center p-6">
+                <div class="bg-pink-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-users text-pink-500 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">Vendor Terpercaya</h3>
+                <p class="text-gray-600">Bekerja sama dengan vendor profesional dan berpengalaman di bidang pernikahan</p>
+            </div>
+            
+            <div class="text-center p-6">
+                <div class="bg-pink-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-heart text-pink-500 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">Layanan Terbaik</h3>
+                <p class="text-gray-600">Pelayanan ramah dan profesional untuk memastikan kepuasan Anda</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Produk Unggulan</h2>
+            <p class="text-gray-600 text-lg">Pilihan terbaik untuk pernikahan impian Anda</p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for product in featured_products %}
+                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                    <img src="{{ product.image }}" alt="{{ product.name }}" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="bg-pink-100 text-pink-800 text-xs px-2 py-1 rounded-full">
+                                {{ product.category|title }}
+                            </span>
+                            <div class="flex items-center">
+                                <i class="fas fa-star text-yellow-400 text-sm mr-1"></i>
+                                <span class="text-sm text-gray-600">{{ product.rating }}</span>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">{{ product.name }}</h3>
+                        <p class="text-gray-600 mb-2 text-sm">{{ product.vendor }}</p>
+                        <p class="text-gray-600 mb-4">{{ product.description|slice(0, 100) }}...</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-2xl font-bold text-pink-500">Rp {{ product.price|number_format }}</span>
+                            <button onclick="addToCart({{ product.id }})" 
+                                    class="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition-colors">
+                                Tambah ke Keranjang
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-12">
+            <a href="{{ base_url }}/shop" class="bg-pink-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-pink-600 transition-colors">
+                Lihat Semua Produk
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-16 bg-pink-500 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl font-bold mb-4">Siap Merencanakan Pernikahan Impian?</h2>
+        <p class="text-xl mb-8 opacity-90">Hubungi kami sekarang untuk konsultasi gratis</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{{ base_url }}/contact" class="bg-white text-pink-500 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                Hubungi Kami
+            </a>
+            <a href="{{ base_url }}/vendors" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-pink-500 transition-colors">
+                Lihat Vendor
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,182 @@
+{% extends 'layout/base.twig' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8" x-data="cartPage()">
+    <h1 class="text-3xl font-bold text-gray-800 mb-8">Keranjang Belanja</h1>
+    
+    <div x-show="items.length === 0" class="text-center py-12">
+        <i class="fas fa-shopping-cart text-gray-400 text-4xl mb-4"></i>
+        <h3 class="text-xl font-semibold text-gray-600 mb-2">Keranjang Anda kosong</h3>
+        <p class="text-gray-500 mb-6">Tambahkan beberapa produk untuk memulai</p>
+        <a href="/shop" class="bg-pink-500 text-white px-6 py-3 rounded-lg hover:bg-pink-600 transition-colors">
+            Lanjutkan Belanja
+        </a>
+    </div>
+    
+    <div x-show="items.length > 0">
+        <!-- Cart Items -->
+        <div class="bg-white rounded-lg shadow-md mb-6">
+            <template x-for="item in items" :key="item.id">
+                <div class="p-6 border-b border-gray-200 last:border-b-0">
+                    <div class="flex items-center space-x-4">
+                        <img :src="item.product.image" :alt="item.product.name" class="w-20 h-20 object-cover rounded">
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold" x-text="item.product.name"></h3>
+                            <p class="text-gray-600" x-text="item.product.vendor"></p>
+                            <p class="text-pink-500 font-semibold" x-text="'Rp ' + item.product.price.toLocaleString()"></p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button @click="updateQuantity(item.id, item.quantity - 1)" 
+                                    class="bg-gray-200 text-gray-700 w-8 h-8 rounded hover:bg-gray-300">-</button>
+                            <span class="w-12 text-center" x-text="item.quantity"></span>
+                            <button @click="updateQuantity(item.id, item.quantity + 1)" 
+                                    class="bg-gray-200 text-gray-700 w-8 h-8 rounded hover:bg-gray-300">+</button>
+                        </div>
+                        <button @click="removeFromCart(item.id)" 
+                                class="text-red-500 hover:text-red-700">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </template>
+        </div>
+        
+        <!-- Order Summary -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold mb-4">Ringkasan Pesanan</h2>
+            <div class="space-y-2 mb-4">
+                <div class="flex justify-between">
+                    <span>Subtotal:</span>
+                    <span x-text="'Rp ' + total.toLocaleString()"></span>
+                </div>
+                <div class="flex justify-between font-semibold text-lg border-t pt-2">
+                    <span>Total:</span>
+                    <span x-text="'Rp ' + total.toLocaleString()"></span>
+                </div>
+            </div>
+            
+            <!-- Checkout Form -->
+            <form @submit.prevent="checkout()" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Acara</label>
+                    <input type="date" x-model="eventDate" required 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Lokasi Acara</label>
+                    <textarea x-model="eventLocation" required rows="3" 
+                              placeholder="Masukkan alamat lengkap tempat acara Anda"
+                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"></textarea>
+                </div>
+                <button type="submit" 
+                        class="w-full bg-pink-500 text-white py-3 rounded-lg font-semibold hover:bg-pink-600 transition-colors">
+                    Buat Pesanan
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+function cartPage() {
+    return {
+        items: [],
+        eventDate: '',
+        eventLocation: '',
+                                event_location: this.eventLocation.trim()
+        get total() {
+            return this.items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+        },
+        
+        init() {
+            this.loadCart();
+        },
+        
+        loadCart() {
+            // Load cart from PHP session via AJAX or page data
+            const baseUrl = '{{ base_url }}';
+            fetch(`${baseUrl}/api/cart/get`)
+                .then(response => response.json())
+                    if (!this.eventDate || !this.eventLocation.trim()) {
+                    if (data.success) {
+                        this.items = data.items || [];
+                    }
+                })
+                .catch(error => console.error('Error loading cart:', error));
+        },
+        
+        async updateQuantity(productId, quantity) {
+            try {
+                const baseUrl = '{{ base_url }}';
+                const response = await fetch(`${baseUrl}/api/cart/update`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ product_id: productId, quantity })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    this.loadCart();
+                }
+            } catch (error) {
+                console.error('Error updating cart:', error);
+            }
+        },
+        
+        async removeFromCart(productId) {
+            try {
+                const baseUrl = '{{ base_url }}';
+                const response = await fetch(`${baseUrl}/api/cart/remove`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ product_id: productId })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    this.loadCart();
+                    showNotification('Produk dihapus dari keranjang', 'success');
+                }
+            } catch (error) {
+                console.error('Error removing from cart:', error);
+            }
+        },
+        
+        async checkout() {
+            if (!this.eventDate || !this.eventLocation) {
+                showNotification('Mohon isi semua field yang diperlukan', 'error');
+                return;
+            }
+            
+            try {
+                const baseUrl = '{{ base_url }}';
+                const response = await fetch(`${baseUrl}/api/orders/create`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        event_date: this.eventDate,
+                        event_location: this.eventLocation
+                    })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    showNotification('Pesanan berhasil dibuat!', 'success');
+                    setTimeout(() => {
+                        const baseUrl = '{{ base_url }}';
+                        window.location.href = `${baseUrl}/orders`;
+                    }, 2000);
+                } else {
+                    showNotification(result.message || 'Gagal membuat pesanan', 'error');
+                }
+            } catch (error) {
+                console.error('Error placing order:', error);
+                showNotification('Terjadi kesalahan', 'error');
+            }
+        }
+    }
+}
+</script>
+{% endblock %}
+{% endblock %}

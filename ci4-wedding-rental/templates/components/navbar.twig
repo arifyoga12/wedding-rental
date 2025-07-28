@@ -1,0 +1,271 @@
+<nav class="bg-white shadow-lg sticky top-0 z-50" x-data="{ 
+    mobileMenuOpen: false,
+    searchOpen: false,
+    searchTerm: ''
+}">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <!-- Logo -->
+            <div class="flex items-center">
+                <a href="{{ base_url }}/" class="flex-shrink-0 flex items-center">
+                    <i class="fas fa-heart text-pink-500 text-2xl mr-2"></i>
+                    <span class="font-bold text-xl text-gray-800">SewaDekorasi</span>
+                </a>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex items-center space-x-8">
+                {% if user and user.email == 'admin@wedding.com' %}
+                    <!-- Admin Navigation -->
+                    <a href="{{ base_url }}/admin" class="text-gray-700 hover:text-pink-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                        <i class="fas fa-tachometer-alt mr-1"></i>Dashboard Admin
+                    </a>
+                {% else %}
+                    <!-- Regular User Navigation -->
+                    <a href="{{ base_url }}/" class="text-gray-700 hover:text-pink-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                        Beranda
+                    </a>
+                    <a href="{{ base_url }}/shop" class="text-gray-700 hover:text-pink-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                        Belanja
+                    </a>
+                    
+                    <!-- Category Dropdown -->
+                    <div class="relative" x-data="{ categoryOpen: false }">
+                        <button @click="categoryOpen = !categoryOpen" 
+                                class="text-gray-700 hover:text-pink-500 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center">
+                            Kategori
+                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        </button>
+                        <div x-show="categoryOpen" @click.away="categoryOpen = false" 
+                             x-transition
+                             class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                            <a href="{{ base_url }}/shop?category=pelaminan" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-crown mr-2 text-purple-500"></i>Pelaminan
+                            </a>
+                            <a href="{{ base_url }}/shop?category=fotografer" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-camera mr-2 text-blue-500"></i>Fotografer
+                            </a>
+                            <a href="{{ base_url }}/shop?category=musik" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-music mr-2 text-green-500"></i>Musik
+                            </a>
+                            <a href="{{ base_url }}/shop?category=mua" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-palette mr-2 text-pink-500"></i>MUA
+                            </a>
+                            <a href="{{ base_url }}/shop?category=mc" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-microphone mr-2 text-yellow-500"></i>MC
+                            </a>
+                            <a href="{{ base_url }}/shop?category=paket" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-gift mr-2 text-indigo-500"></i>Paket
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <a href="{{ base_url }}/vendors" class="text-gray-700 hover:text-pink-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                        Vendor
+                    </a>
+                    {% if user %}
+                        <a href="{{ base_url }}/orders" class="text-gray-700 hover:text-pink-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                            Pesanan Saya
+                        </a>
+                    {% endif %}
+                    <a href="{{ base_url }}/contact" class="text-gray-700 hover:text-pink-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                        Kontak
+                    </a>
+                {% endif %}
+            </div>
+
+            <!-- Right Side -->
+            <div class="flex items-center space-x-4">
+                <!-- Search -->
+                <button @click="searchOpen = !searchOpen" class="text-gray-700 hover:text-pink-500 transition-colors">
+                    <i class="fas fa-search text-lg"></i>
+                </button>
+
+                <!-- Cart -->
+                <a href="{{ base_url }}/cart" class="relative text-gray-700 hover:text-pink-500 transition-colors">
+                    <i class="fas fa-shopping-cart text-lg"></i>
+                    {% if cart_count > 0 %}
+                        <span class="absolute -top-2 -right-2 bg-pink-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                            {{ cart_count }}
+                        </span>
+                    {% endif %}
+                </a>
+
+                <!-- User Menu -->
+                {% if user %}
+                    <div class="relative" x-data="{ userMenuOpen: false }">
+                        <button @click="userMenuOpen = !userMenuOpen" class="flex items-center text-gray-700 hover:text-pink-500 transition-colors">
+                            <i class="fas fa-user text-lg mr-1"></i>
+                            <span class="hidden sm:block">{{ user.name }}</span>
+                        </button>
+                        <div x-show="userMenuOpen" @click.away="userMenuOpen = false" 
+                             class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                            {% if user.email == 'admin@wedding.com' %}
+                                <a href="{{ base_url }}/admin" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-tachometer-alt mr-2"></i>Dashboard Admin
+                                </a>
+                            {% else %}
+                                <a href="{{ base_url }}/orders" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-shopping-cart mr-2"></i>Pesanan Saya
+                                </a>
+                            {% endif %}
+                            <button onclick="logout()" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Keluar
+                            </button>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{{ base_url }}/auth" class="bg-pink-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-pink-600 transition-colors">
+                        Masuk
+                    </a>
+                {% endif %}
+
+                <!-- Mobile menu button -->
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-gray-700 hover:text-pink-500">
+                    <i class="fas fa-bars text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div x-show="searchOpen" x-transition class="pb-4" x-data="navbarSearch()">
+            <div class="relative">
+                <input type="text" x-model="searchTerm" 
+                       @input.debounce.300ms="performSearch()"
+                       @focus="showResults = true"
+                       @blur="hideResults()"
+                       placeholder="Cari produk, vendor..." 
+                       class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                
+                <!-- Live Search Results -->
+                <div x-show="showResults && searchResults.length > 0" 
+                     x-transition
+                     class="absolute z-50 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-96 overflow-y-auto">
+                    <div class="p-2 text-sm text-gray-500 border-b">
+                        <span x-text="searchResults.length"></span> hasil ditemukan
+                    </div>
+                    <template x-for="product in searchResults.slice(0, 6)" :key="product.id">
+                        <div @click="selectProduct(product)" 
+                             class="flex items-center p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                            <img :src="product.image" :alt="product.name" class="w-10 h-10 object-cover rounded mr-3">
+                            <div class="flex-1">
+                                <h4 class="font-medium text-gray-800 text-sm" x-text="product.name"></h4>
+                                <p class="text-xs text-gray-500" x-text="product.vendor"></p>
+                                <p class="text-xs font-semibold text-pink-500" x-text="'Rp ' + parseInt(product.price).toLocaleString()"></p>
+                            </div>
+                        </div>
+                    </template>
+                    <div x-show="searchResults.length > 6" class="p-3 text-center border-t">
+                        <button @click="viewAllResults()" class="text-pink-500 hover:text-pink-600 text-sm font-medium">
+                            Lihat semua hasil di halaman shop
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Search Button -->
+                <button @click="viewAllResults()" 
+                        class="absolute right-2 top-2 bg-pink-500 text-white px-4 py-1 rounded hover:bg-pink-600 transition-colors text-sm">
+                    Cari
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div x-show="mobileMenuOpen" x-transition class="md:hidden pb-4">
+            <div class="space-y-1">
+                {% if user and user.email == 'admin@wedding.com' %}
+                    <!-- Admin Mobile Menu -->
+                    <a href="{{ base_url }}/admin" class="block text-gray-700 hover:text-pink-500 px-3 py-2 rounded-md text-base font-medium">
+                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard Admin
+                    </a>
+                {% else %}
+                    <!-- Regular User Mobile Menu -->
+                    <a href="{{ base_url }}/" class="block text-gray-700 hover:text-pink-500 px-3 py-2 rounded-md text-base font-medium">Beranda</a>
+                    <a href="{{ base_url }}/shop" class="block text-gray-700 hover:text-pink-500 px-3 py-2 rounded-md text-base font-medium">Belanja</a>
+                    <a href="{{ base_url }}/vendors" class="block text-gray-700 hover:text-pink-500 px-3 py-2 rounded-md text-base font-medium">Vendor</a>
+                    {% if user %}
+                        <a href="{{ base_url }}/orders" class="block text-gray-700 hover:text-pink-500 px-3 py-2 rounded-md text-base font-medium">Pesanan Saya</a>
+                    {% endif %}
+                    <a href="{{ base_url }}/contact" class="block text-gray-700 hover:text-pink-500 px-3 py-2 rounded-md text-base font-medium">Kontak</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+
+<script>
+function navbarSearch() {
+    return {
+        searchTerm: '',
+        searchResults: [],
+        showResults: false,
+        isSearching: false,
+        
+        async performSearch() {
+            if (!this.searchTerm.trim()) {
+                this.searchResults = [];
+                this.showResults = false;
+                return;
+            }
+            
+            this.isSearching = true;
+            
+            try {
+                const baseUrl = '{{ base_url }}';
+                const params = new URLSearchParams({
+                    q: this.searchTerm.trim()
+                });
+                
+                const response = await fetch(`${baseUrl}/api/shop/search?${params}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    this.searchResults = result.products;
+                    this.showResults = true;
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+            } finally {
+                this.isSearching = false;
+            }
+        },
+        
+        selectProduct(product) {
+            this.showResults = false;
+            // Navigate to shop with search term
+            const baseUrl = '{{ base_url }}';
+            window.location.href = `${baseUrl}/shop?search=${encodeURIComponent(product.name)}`;
+        },
+        
+        hideResults() {
+            setTimeout(() => {
+                this.showResults = false;
+            }, 200);
+        },
+        
+        viewAllResults() {
+            if (this.searchTerm.trim()) {
+                const baseUrl = '{{ base_url }}';
+                window.location.href = `${baseUrl}/shop?search=${encodeURIComponent(this.searchTerm)}`;
+            }
+        }
+    }
+}
+
+async function logout() {
+    try {
+        const response = await fetch('{{ base_url }}/api/auth/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        
+        if (response.ok) {
+            window.location.href = '{{ base_url }}/';
+        }
+    } catch (error) {
+        console.error('Logout gagal:', error);
+    }
+}
+</script>

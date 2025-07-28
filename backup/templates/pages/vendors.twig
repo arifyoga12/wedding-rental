@@ -1,0 +1,80 @@
+{% extends 'layout/base.twig' %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">Vendor Pernikahan</h1>
+        <p class="text-gray-600">Terhubung dengan penyedia layanan pernikahan profesional</p>
+    </div>
+
+    <!-- Search -->
+    <div class="mb-8 bg-white p-6 rounded-lg shadow-md">
+        <form method="GET" action="{{ base_url }}/vendors" class="flex gap-4">
+            <div class="flex-1">
+                <input type="text" name="search" value="{{ search_term }}" 
+                       placeholder="Cari vendor..." 
+                       class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+            </div>
+            <button type="submit" class="bg-pink-500 text-white px-6 py-2 rounded-md hover:bg-pink-600 transition-colors">
+                Cari
+            </button>
+        </form>
+    </div>
+
+    <!-- Vendors Grid -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for vendor in vendors %}
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold">{{ vendor.name }}</h3>
+                        <div class="flex items-center">
+                            <i class="fas fa-star text-yellow-400 mr-1"></i>
+                            <span class="font-semibold">{{ vendor.rating }}</span>
+                        </div>
+                    </div>
+                    
+                    <p class="text-gray-600 mb-4">{{ vendor.description }}</p>
+                    
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-500 mb-2">
+                            <i class="fas fa-map-marker-alt mr-2"></i>{{ vendor.address }}
+                        </p>
+                        <p class="text-sm text-gray-500">
+                            <i class="fas fa-phone mr-2"></i>{{ vendor.phone }}
+                        </p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h4 class="font-semibold mb-2">Spesialisasi:</h4>
+                        <div class="flex flex-wrap gap-2">
+                            {% for specialty in vendor.specialties %}
+                                <span class="bg-pink-100 text-pink-800 text-xs px-2 py-1 rounded-full">
+                                    {{ specialty }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-2">
+                        <button class="flex-1 bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition-colors">
+                            Hubungi Vendor
+                        </button>
+                        <button onclick="window.location.href='{{ base_url }}/shop?search={{ vendor.name|url_encode }}'" 
+                                class="flex-1 border border-pink-500 text-pink-500 px-4 py-2 rounded hover:bg-pink-50 transition-colors">
+                            Lihat Produk
+                        </button>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-span-full text-center py-12">
+                <i class="fas fa-users text-gray-400 text-4xl mb-4"></i>
+                <h3 class="text-xl font-semibold text-gray-600 mb-2">Vendor tidak ditemukan</h3>
+                <p class="text-gray-500">Coba sesuaikan pencarian Anda</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

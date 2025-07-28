@@ -1,0 +1,78 @@
+<footer class="bg-gray-800 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-4 gap-8">
+            <!-- Company Info -->
+            <div>
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-heart text-pink-500 text-2xl mr-2"></i>
+                    <span class="font-bold text-xl">WeddingRental</span>
+                </div>
+                <p class="text-gray-300 mb-4">
+                    Mewujudkan pernikahan impian Anda dengan dekorasi terbaik dan layanan profesional.
+                </p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-300 hover:text-pink-500 transition-colors">
+                        <i class="fab fa-facebook-f text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-300 hover:text-pink-500 transition-colors">
+                        <i class="fab fa-instagram text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-300 hover:text-pink-500 transition-colors">
+                        <i class="fab fa-whatsapp text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-300 hover:text-pink-500 transition-colors">
+                        <i class="fab fa-youtube text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Quick Links -->
+            <div>
+                <h3 class="font-semibold text-lg mb-4">Tautan Cepat</h3>
+                <ul class="space-y-2">
+                    <li><a href="{{ base_url }}/" class="text-gray-300 hover:text-pink-500 transition-colors">Beranda</a></li>
+                    <li><a href="{{ base_url }}/shop" class="text-gray-300 hover:text-pink-500 transition-colors">Belanja</a></li>
+                    <li><a href="{{ base_url }}/vendors" class="text-gray-300 hover:text-pink-500 transition-colors">Vendor</a></li>
+                    <li><a href="{{ base_url }}/contact" class="text-gray-300 hover:text-pink-500 transition-colors">Kontak</a></li>
+                </ul>
+            </div>
+            
+            <!-- Services -->
+            <div>
+                <h3 class="font-semibold text-lg mb-4">Layanan</h3>
+                <ul class="space-y-2">
+                    <li><a href="{{ base_url }}/shop?category=pelaminan" class="text-gray-300 hover:text-pink-500 transition-colors">Pelaminan</a></li>
+                    <li><a href="{{ base_url }}/shop?category=fotografer" class="text-gray-300 hover:text-pink-500 transition-colors">Fotografi</a></li>
+                    <li><a href="{{ base_url }}/shop?category=musik" class="text-gray-300 hover:text-pink-500 transition-colors">Musik</a></li>
+                    <li><a href="{{ base_url }}/shop?category=mua" class="text-gray-300 hover:text-pink-500 transition-colors">Rias Pengantin</a></li>
+                </ul>
+            </div>
+            
+            <!-- Contact Info -->
+            <div>
+                <h3 class="font-semibold text-lg mb-4">Info Kontak</h3>
+                <div class="space-y-2">
+                    <p class="text-gray-300">
+                        <i class="fas fa-map-marker-alt mr-2"></i>
+                        Jl. Wedding Street No. 123<br>
+                        Jakarta, Indonesia 12345
+                    </p>
+                    <p class="text-gray-300">
+                        <i class="fas fa-phone mr-2"></i>
+                        +62 812-3456-7890
+                    </p>
+                    <p class="text-gray-300">
+                        <i class="fas fa-envelope mr-2"></i>
+                        info@weddingrental.com
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+            <p class="text-gray-300">
+                &copy; {{ "now"|date("Y") }} WeddingRental. All rights reserved.
+            </p>
+        </div>
+    </div>
+</footer>

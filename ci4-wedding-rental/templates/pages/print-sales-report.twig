@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Penjualan - SewaDekorasi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e91e63;
+            padding-bottom: 20px;
+        }
+        
+        .company-name {
+            font-size: 28px;
+            font-weight: bold;
+            color: #e91e63;
+            margin-bottom: 5px;
+        }
+        
+        .report-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .report-period {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .print-date {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .summary {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .summary-item {
+            text-align: center;
+        }
+        
+        .summary-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .summary-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e91e63;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #e91e63;
+            color: white;
+            font-weight: bold;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .category-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .text-right {
+            text-align: right;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+        
+        @media print {
+            body {
+                margin: 0;
+                padding: 15px;
+            }
+            
+            .header {
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+            }
+            
+            .summary {
+                margin-bottom: 20px;
+                padding: 15px;
+            }
+            
+            th, td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="company-name">Abun Wedding Decoration</div>
+        <div class="report-title">Laporan Penjualan Produk</div>
+        {% if start_date and end_date %}
+            <div class="report-period">
+                Periode: {{ start_date|date('d F Y') }} - {{ end_date|date('d F Y') }}
+            </div>
+        {% else %}
+            <div class="report-period">Semua Periode</div>
+        {% endif %}
+        <div class="print-date">Dicetak pada: {{ print_date|date('d F Y H:i:s') }}</div>
+    </div>
+    
+    <div class="summary">
+        <div class="summary-item">
+            <div class="summary-label">Total Produk Terjual</div>
+            <div class="summary-value">{{ total_sold|number_format }}</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Total Revenue</div>
+            <div class="summary-value">Rp {{ total_revenue|number_format }}</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Jenis Produk</div>
+            <div class="summary-value">{{ sales_data|length }}</div>
+        </div>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Nama Produk</th>
+                <th>Kategori</th>
+                <th class="text-right">Qty Terjual</th>
+                <th class="text-right">Harga Rata-rata</th>
+                <th class="text-right">Total Revenue</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in sales_data %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ item.product_name }}</td>
+                    <td>
+                        <span class="category-badge">{{ item.category|title }}</span>
+                    </td>
+                    <td class="text-right">{{ item.total_sold|number_format }}</td>
+                    <td class="text-right">Rp {{ item.avg_price|number_format }}</td>
+                    <td class="text-right">Rp {{ item.total_revenue|number_format }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" style="text-align: center; color: #666;">
+                        Tidak ada data penjualan pada periode ini
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        {% if sales_data %}
+            <tfoot>
+                <tr style="background-color: #e91e63; color: white; font-weight: bold;">
+                    <td colspan="3">TOTAL</td>
+                    <td class="text-right">{{ total_sold|number_format }}</td>
+                    <td class="text-right">-</td>
+                    <td class="text-right">Rp {{ total_revenue|number_format }}</td>
+                </tr>
+            </tfoot>
+        {% endif %}
+    </table>
+    
+    <div class="footer">
+        <p>Laporan ini dibuat secara otomatis oleh sistem SewaDekorasi</p>
+        <p>© {{ "now"|date("Y") }} SewaDekorasi - Wedding Decoration Rental</p>
+    </div>
+    
+    <script>
+        // Auto print when page loads
+        window.onload = function() {
+            window.print();
+        }
+    </script>
+</body>
+</html>
