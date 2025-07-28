@@ -1,180 +1,195 @@
-# Wedding Decoration Rental - PHP Version
+# Wedding Decoration Rental - CodeIgniter 4
 
-Aplikasi Wedding Decoration Rental yang dimigrasi dari React/TypeScript ke PHP dengan fitur lengkap.
+Aplikasi web rental dekorasi pernikahan yang dibangun menggunakan CodeIgniter 4 dengan desain modern dan responsive.
 
-## 🚀 Fitur Utama
+## 🌟 Fitur Utama
 
-- ✅ **Authentication System** (Login/Register/Logout)
-- ✅ **Product Catalog** dengan search dan filter
-- ✅ **Shopping Cart** functionality
-- ✅ **Order Management** 
-- ✅ **Vendor Directory**
-- ✅ **Admin Dashboard**
-- ✅ **Responsive Design** dengan Tailwind CSS
+- **Katalog Produk**: Menampilkan berbagai dekorasi pernikahan dengan kategori yang beragam
+- **Sistem Autentikasi**: Login dan registrasi pengguna dengan enkripsi password
+- **Pencarian & Filter**: Pencarian produk berdasarkan nama dan kategori
+- **Rating & Review**: Sistem penilaian dan ulasan produk
+- **Responsive Design**: Tampilan yang optimal di semua device
+- **Admin Panel**: Manajemen produk, vendor, dan pesanan
+
+## 🚀 Teknologi yang Digunakan
+
+- **Framework**: CodeIgniter 4
+- **Database**: MySQL
+- **Frontend**: Tailwind CSS, FontAwesome
+- **PHP Version**: 8.1+
+- **Authentication**: Session-based dengan password hashing
 
 ## 📋 Persyaratan Sistem
 
 - PHP 8.1 atau lebih tinggi
-- MySQL 5.7 atau lebih tinggi
+- MySQL 5.7+ atau MariaDB 10.3+
 - Composer
-- Web server (Apache/Nginx) atau PHP built-in server
+- Web server (Apache/Nginx)
+- Extensions PHP: curl, intl, mbstring, xml
 
-## 🛠️ Instalasi
+## 🔧 Instalasi
 
-### 1. Clone atau Download Project
-
+### 1. Clone Repository
 ```bash
-git clone <repository-url>
-cd wedding-rental-php
+cd ci4-wedding-rental
 ```
 
-### 2. Setup Database
-
-#### Menggunakan XAMPP (Recommended):
-1. Download dan install XAMPP dari https://www.apachefriends.org/
-2. Jalankan XAMPP Control Panel
-3. Start **Apache** dan **MySQL**
-4. Buka http://localhost/phpmyadmin
-5. Buat database baru dengan nama `wedding_rental`
-6. Import file `database/schema.sql`
-
-#### Menggunakan Command Line:
-```bash
-mysql -u root -p
-CREATE DATABASE wedding_rental;
-USE wedding_rental;
-SOURCE database/schema.sql;
-exit
-```
-
-### 3. Konfigurasi Environment
-
-Copy file `.env.example` ke `.env`:
-```bash
-cp .env.example .env
-```
-
-Edit file `.env` sesuai konfigurasi database Anda:
-```env
-DB_HOST=localhost
-DB_NAME=wedding_rental
-DB_USER=root
-DB_PASS=your_mysql_password
-```
-
-### 4. Install Dependencies
-
+### 2. Install Dependencies
 ```bash
 composer install
 ```
 
-### 5. Jalankan Aplikasi
-
+### 3. Setup Environment
 ```bash
-composer serve
+cp env .env
 ```
 
-Atau manual:
-```bash
-php -S localhost:8000 -t public
+Edit file `.env` dan sesuaikan konfigurasi database:
+```
+database.default.hostname = localhost
+database.default.database = wedding_rental
+database.default.username = your_username
+database.default.password = your_password
 ```
 
-### 6. Akses Aplikasi
+### 4. Setup Database
+```bash
+# Import database schema
+mysql -u your_username -p wedding_rental < database.sql
+```
 
-- **Website**: http://localhost:8000
-- **Admin Login**: 
-  - Email: `admin@wedding.com`
-  - Password: `admin123`
+### 5. Set Permissions
+```bash
+chmod -R 755 writable/
+chmod -R 755 public/uploads/
+```
+
+### 6. Run Development Server
+```bash
+php spark serve
+```
+
+Aplikasi akan berjalan di `http://localhost:8080`
 
 ## 📁 Struktur Project
 
 ```
-wedding-rental-php/
+ci4-wedding-rental/
+├── app/
+│   ├── Controllers/         # Controllers
+│   │   ├── Home.php        # Homepage controller
+│   │   ├── Auth.php        # Authentication controller
+│   │   └── Shop.php        # Product catalog controller
+│   ├── Models/             # Models
+│   │   ├── UserModel.php   # User model
+│   │   ├── ProductModel.php # Product model
+│   │   └── VendorModel.php # Vendor model
+│   ├── Views/              # Views
+│   │   ├── layout/         # Layout templates
+│   │   └── pages/          # Page views
+│   └── Config/
+│       └── Routes.php      # Route configuration
 ├── public/
-│   ├── index.php          # Entry point
-│   └── assets/            # CSS, JS, images
-├── src/
-│   ├── Controllers/       # Application logic
-│   ├── Models/           # Database models
-│   └── Core/             # Router, Database core
-├── templates/
-│   ├── pages/            # Page templates
-│   ├── components/       # Reusable components
-│   └── layout/           # Base layout
-├── database/
-│   └── schema.sql        # Database schema
-├── .env                  # Database configuration
-└── composer.json         # PHP dependencies
+│   ├── assets/            # CSS, JS, Images
+│   └── uploads/           # Upload directory
+├── database.sql           # Database schema
+└── .env                   # Environment configuration
 ```
 
-## 🎯 Testing Aplikasi
+## 🎯 Endpoints API
 
-1. **Homepage**: Lihat featured products
-2. **Shop**: Browse dan search produk
-3. **Vendors**: Lihat daftar vendor
-4. **Register**: Buat akun baru
-5. **Login**: Masuk dengan akun
-6. **Add to Cart**: Tambah produk ke keranjang
-7. **Checkout**: Buat pesanan
-8. **Admin**: Login sebagai admin untuk dashboard
+### Authentication
+- `GET /auth` - Halaman login/register
+- `POST /auth/login` - Proses login
+- `POST /auth/register` - Proses registrasi
+- `GET /auth/logout` - Logout
 
-## 🔧 Troubleshooting
+### Products
+- `GET /shop` - Katalog produk
+- `GET /product/{id}` - Detail produk
+- `GET /shop?search={query}` - Pencarian produk
+- `GET /shop?category={category}` - Filter kategori
 
-### Error: "could not find driver"
-Install PHP MySQL extension:
+### Home
+- `GET /` - Homepage
+- `GET /about` - Halaman tentang
+- `GET /contact` - Halaman kontak
+
+## 🗄️ Database Schema
+
+### Tabel Utama:
+- **users**: Data pengguna
+- **vendors**: Data vendor/penyedia
+- **products**: Data produk dekorasi
+- **orders**: Data pesanan
+- **order_items**: Item dalam pesanan
+- **payments**: Data pembayaran
+- **reviews**: Review dan rating
+
+### Kategori Produk:
+- Pelaminan
+- Bunga
+- Dekorasi Meja
+- Lighting
+- Backdrop
+- Karpet
+
+## 👤 Default Login
+
+Setelah import database, Anda dapat login dengan akun berikut:
+- **Email**: john@example.com
+- **Password**: password
+
+## 🛠️ Development
+
+### Menambah Controller Baru
 ```bash
-# Ubuntu/Debian
-sudo apt-get install php-mysql php-pdo-mysql
-
-# Windows: Uncomment di php.ini
-extension=pdo_mysql
+php spark make:controller NamaController
 ```
 
-### Error: "Access denied for user"
-Periksa konfigurasi database di `.env` dan pastikan MySQL service berjalan.
-
-### Error: "Class not found"
-Jalankan:
+### Menambah Model Baru
 ```bash
-composer dump-autoload
+php spark make:model NamaModel
 ```
 
-## 🛡️ Security
+### Migration
+```bash
+php spark make:migration nama_migration
+php spark migrate
+```
 
-- Password di-hash menggunakan PHP `password_hash()`
-- Prepared statements untuk mencegah SQL injection
-- Session-based authentication
-- CSRF protection (bisa ditambahkan)
+## 🔐 Security
 
-## 📝 API Endpoints
+- CSRF Protection diaktifkan
+- Password di-hash menggunakan PHP password_hash()
+- Input validation pada semua form
+- SQL injection prevention dengan Query Builder
 
-- `POST /api/auth/login` - User login
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/logout` - User logout
-- `POST /api/cart/add` - Add item to cart
-- `POST /api/cart/remove` - Remove item from cart
-- `POST /api/cart/update` - Update cart quantity
-- `POST /api/orders/create` - Create new order
+## 📱 Responsive Design
 
-## 🎨 Frontend Technologies
+Aplikasi menggunakan Tailwind CSS dengan breakpoints:
+- Mobile: < 768px
+- Tablet: 768px - 1024px
+- Desktop: > 1024px
 
-- **Tailwind CSS** - Utility-first CSS framework
-- **Alpine.js** - Lightweight JavaScript framework
-- **Twig** - Template engine
-- **Font Awesome** - Icons
+## 🎨 Kustomisasi
 
-## 📄 License
+### Mengubah Tema Warna
+Edit file `app/Views/layout/header.php` dan sesuaikan class Tailwind CSS.
 
-MIT License - feel free to use this project for learning or commercial purposes.
-
-## 🤝 Contributing
-
-1. Fork the project
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
+### Menambah Kategori Produk
+1. Update enum di database (tabel products)
+2. Update pilihan di form `app/Views/pages/shop.php`
+3. Update validation di `ProductModel.php`
 
 ## 📞 Support
 
-Jika ada pertanyaan atau masalah, silakan buat issue di repository ini.
+Jika ada pertanyaan atau issue, silakan buat issue di repository ini atau hubungi tim development.
+
+## 📄 License
+
+Project ini menggunakan MIT License.
+
+---
+
+**Wedding Decoration Rental** - Mewujudkan pernikahan impian Anda dengan dekorasi berkualitas tinggi. ✨💒
